@@ -54,33 +54,39 @@ class _CategoryNewsState extends State<CategoryNews> {
       ),
       body: _isLoading
           ? Center(
-              child: Container(
-                child: CircularProgressIndicator(),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             )
           : SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: articles.length,
-                        itemBuilder: (snapshot, index) {
-                          return BlogTile(
-                            imageUrl: articles[index].urlToImage,
-                            decsription: articles[index].description,
-                            title: articles[index].title,
-                            url: articles[index].url,
-                            publishedAt:
-                                (articles[index].publishedAt).toString(),
-                          );
-                        },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(top: 5.0),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: articles.length,
+                          itemBuilder: (snapshot, index) {
+                            return BlogTile(
+                              imageUrl: articles[index].urlToImage,
+                              decsription: articles[index].description,
+                              title: articles[index].title,
+                              url: articles[index].url,
+                              publishedAt:
+                                  (articles[index].publishedAt).toString(),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

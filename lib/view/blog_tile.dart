@@ -1,18 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/view/article_view.dart';
+import 'package:intl/intl.dart';
 
 class BlogTile extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String decsription;
   final String url;
+  final String publishedAt;
 
   BlogTile(
       {@required this.imageUrl,
       @required this.decsription,
       @required this.title,
-      @required this.url});
+      @required this.url,
+      @required this.publishedAt});
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +75,45 @@ class BlogTile extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black54,
               ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Icon(Icons.date_range),
+                      Text(
+                        DateFormat('yyyy-MM-dd')
+                                .format(DateTime.parse(publishedAt)) ??
+                            '',
+                        style: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time),
+                      Text(
+                        DateFormat('hh:mm:ss')
+                                .format(DateTime.parse(publishedAt)) ??
+                            '',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

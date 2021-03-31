@@ -149,6 +149,8 @@ class _HomePageState extends State<HomePage> {
                                 decsription: articles[index].description,
                                 title: articles[index].title,
                                 url: articles[index].url,
+                                publishedAt:
+                                    (articles[index].publishedAt).toString(),
                               );
                             },
                           ),

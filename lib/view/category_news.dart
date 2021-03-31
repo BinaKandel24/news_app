@@ -74,6 +74,8 @@ class _CategoryNewsState extends State<CategoryNews> {
                             decsription: articles[index].description,
                             title: articles[index].title,
                             url: articles[index].url,
+                            publishedAt:
+                                (articles[index].publishedAt).toString(),
                           );
                         },
                       ),

@@ -27,7 +27,7 @@ class News {
   List<Article> articleList = [];
   Future<void> getNewsModel({bool isRefresh}) async {
     String url =
-        'https://newsapi.org/v2/everything?q=tesla&from=2021-02-28&sortBy=publishedAt&apiKey=57017a795e8a4b788626e2de3b54ac66';
+        'http://newsapi.org/v2/everything?domains=wsj.com&apiKey=a0ce42a15c70486ab69fc032927a03f2';
 
     final cacheDir = await getTemporaryDirectory();
     var cachedFileName = 'Cachedata.json';
@@ -58,7 +58,7 @@ class News {
           articleList.add(article);
         }
       } else {
-        //api-key: '57017a795e8a4b788626e2de3b54ac66';
+        //api-key: 'a0ce42a15c70486ab69fc032927a03f2';
         // if (token == 'QpwL5tke4Pnpja7X4') {
         //   token = '4973c567a7844dba8cd3d622a1138438';
         final response = await http.get(Uri.parse(url));
@@ -86,7 +86,7 @@ class CategoryNewsClass {
   List<Article> articleList = [];
   Future<void> getNews(String category) async {
     String url =
-        'https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=57017a795e8a4b788626e2de3b54ac66';
+        'http://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=a0ce42a15c70486ab69fc032927a03f2';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

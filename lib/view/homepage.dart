@@ -17,7 +17,16 @@ class _HomePageState extends State<HomePage> {
   List<CategoryModel> categories = [];
   List<Article> articles = [];
 
-  bool _isLoading = true;
+  buildShowDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+  }
 
   @override
   void initState() {
@@ -27,20 +36,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   getNewsModel(bool isRefresh) async {
-    _isLoading = true;
-
-    setState(() {
-      if (_isLoading) {
-        CircularProgressIndicator();
-      }
-    });
     News news = News();
     await news.getNewsModel(isRefresh: isRefresh);
     articles = news.articleList;
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -50,33 +48,34 @@ class _HomePageState extends State<HomePage> {
         title: Text("TODAY'S NEWS"),
         actions: [
           IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      'Are you sure you want to logout?',
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).popAndPushNamed('/login');
-                        },
-                        child: Text('Yes'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('No'),
-                      ),
-                    ],
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(
+                    'Are you sure you want to logout?',
                   ),
-                );
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed('/login');
+                      },
+                      child: Text('Yes'),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('No'),
+                    ),
+                  ],
+                ),
+              );
 
-                getNewsModel(true);
-              }),
+              getNewsModel(true);
+            },
+          ),
         ],
         backgroundColor: Colors.red,
         elevation: 0.0,
@@ -84,82 +83,79 @@ class _HomePageState extends State<HomePage> {
       body: WillPopScope(
         onWillPop: () {
           return showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: Text(
-                      'Are you sure?',
-                    ),
-                    content: Text('It will close the application.'),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          SystemNavigator.pop();
-                        },
-                        child: Text('Yes'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('No'),
-                      ),
-                    ],
-                  ));
-        },
-        child: _isLoading
-            ? Center(
-                child: Container(
-                  child: CircularProgressIndicator(),
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                'Are you sure?',
+              ),
+              content: Text('It will close the application.'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  child: Text('Yes'),
                 ),
-              )
-            : RefreshIndicator(
-                onRefresh: () async => getNewsModel(true),
-                child: SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        //categories
-                        Container(
-                          height: 90.0,
-                          padding: EdgeInsets.all(10.0),
-                          child: ListView.builder(
-                            itemCount: categories.length,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return CategoryTile(
-                                imageUrl: categories[index].imageUrl,
-                                categoryName: categories[index].categoryName,
-                              );
-                            },
-                          ),
-                        ),
-
-                        //Blogs
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: articles.length,
-                            itemBuilder: (snapshot, index) {
-                              return BlogTile(
-                                imageUrl: articles[index].urlToImage,
-                                decsription: articles[index].description,
-                                title: articles[index].title,
-                                url: articles[index].url,
-                                publishedAt:
-                                    (articles[index].publishedAt).toString(),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            ),
+          );
+        },
+        child: RefreshIndicator(
+          onRefresh: () async {
+            buildShowDialog(context);
+            await getNewsModel(true);
+            Navigator.of(context).pop();
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  //categories
+                  Container(
+                    height: 90.0,
+                    padding: EdgeInsets.all(10.0),
+                    child: ListView.builder(
+                      itemCount: categories.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return CategoryTile(
+                          imageUrl: categories[index].imageUrl,
+                          categoryName: categories[index].categoryName,
+                        );
+                      },
                     ),
                   ),
-                ),
+
+                  //Blogs
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: articles.length,
+                      itemBuilder: (snapshot, index) {
+                        return BlogTile(
+                          imageUrl: articles[index].urlToImage,
+                          decsription: articles[index].description,
+                          title: articles[index].title,
+                          url: articles[index].url,
+                          publishedAt: (articles[index].publishedAt).toString(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
+            ),
+          ),
+        ),
       ),
     );
   }
